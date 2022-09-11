@@ -25,6 +25,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return    TextFormField(
+      maxLines: widget.index==3?3:widget.index==0?1:1,
       controller: widget.controller,
       decoration:  InputDecoration(
           focusedBorder:  OutlineInputBorder(
@@ -39,7 +40,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ),),
           ),
           labelStyle: const TextStyle(color: Colors.black),
-          prefixIcon: Icon( widget.icon.icon,color: Colors.red,),
+          prefixIcon: Icon( widget.icon.icon,color: Colors.deepOrange,size: widget.index==3?38:25,),
           border: OutlineInputBorder(
               borderSide: const BorderSide(
                   color: Colors.red,
@@ -51,6 +52,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         widget.controller.text = text ;
         setState(() { });
       } ,
+      readOnly: widget.index==1||widget.index==2?true:false,
       validator: (text) {
         if(text == null || text.isEmpty)  {
           return widget.errorText;
@@ -58,25 +60,57 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       },
       onTap: (){
      if(widget.index==1){
-       showTimePicker(context: context, initialTime: TimeOfDay.now()).then((value) {
+       showTimePicker(
+
+         builder: (context, child) {
+           return Theme(
+               data: Theme.of(context).copyWith(
+             colorScheme: const ColorScheme.light(
+               primary: Colors.deepOrange, // <-- SEE HERE
+               onPrimary: Colors.white, // <-- SEE HERE
+               onSurface: Colors.black, // <-- SEE HERE
+             ),
+             textButtonTheme: TextButtonThemeData(
+               style: TextButton.styleFrom(
+                 primary: Colors.deepOrange, // button text color
+               ),
+             ),
+           ), child: child!,);
+         },
+           context: context, initialTime: TimeOfDay.now()).then((value) {
          widget.controller.text = value!.format(context).toString();
-       });
+
+           } ,
+       );
        setState(() {
 
        });
      }else if(widget.index==2){
        showDatePicker(
-           context: context,
+           builder: (context, child) {
+             return Theme(
+               data: Theme.of(context).copyWith(
+                 colorScheme: const ColorScheme.light(
+                   primary: Colors.deepOrange, // <-- SEE HERE
+                   onPrimary: Colors.white, // <-- SEE HERE
+                   onSurface: Colors.black, // <-- SEE HERE
+                 ),
+                 textButtonTheme: TextButtonThemeData(
+                   style: TextButton.styleFrom(
+                     primary: Colors.deepOrange, // button text color
+                   ),
+                 ),
+               ), child: child!,);
+           },
+         context: context,
            initialDate: DateTime.now(),
            firstDate:
-           DateTime.now().subtract(Duration(days: 365)),
-           lastDate: DateTime.now().add(Duration(days: 365)))
+           DateTime.now().subtract(const Duration(days: 365),),
+           lastDate: DateTime.now().add(const Duration(days: 365)))
            .then((value) {
         widget.controller.text = '${value!.year.toString()}-${value.month.toString()}-${value.day.toString()}';
        });
-       setState(() {
-
-       });
+       setState(() {});
      }
       },
     );

@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 
 class EmptyTasks extends StatelessWidget {
-  const EmptyTasks({Key? key}) : super(key: key);
-
+final String text ;
+EmptyTasks(this.text);
   @override
   Widget build(BuildContext context) {
      return Center(
        child: Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.menu, size: 100,color: Colors.grey,),
-          Text('NO tasks yet, Please add some tasks', style: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-            fontSize: 18
-          ),) ,
+        children:  [
+          const Icon(Icons.wb_incandescent, size: 120,color: Colors.grey,),
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(text, style: const TextStyle(
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              fontSize: 22
+            ),),
+          ) ,
         ],
     ),
      );

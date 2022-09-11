@@ -3,13 +3,17 @@ class Information {
   String  time;
   String date ;
   String description ;
+  int id  ;
+  String sliderValue ;
   Information(
 
   {
     required this.time ,
     required this.title,
     required this.date,
-    this.description=''
+    required this.description,
+    this.id=0,
+    this.sliderValue = '0'
 }
 
       );

@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_with_sql/contrioller/provider.dart';
 import 'package:todo_with_sql/home/bottom_sheet/text_field_component.dart';
 import 'package:todo_with_sql/model/information.dart';
-import 'package:todo_with_sql/view/task_widget/task_widget.dart';
-
-import '../../contrioller/sqflite/sqflite.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   @override
@@ -26,9 +24,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       builder: (cotext, provider, _) => Form(
         key: formController,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 20),
           child: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.83,
               child: Column(
                 children: [
@@ -93,23 +91,35 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.red)),
                       onPressed: () {
-                        setState(() {
-                          if (formController.currentState?.validate() == true) {
-                            createDataBase();
-                            insertToDataBase();
-                            print('data added');
-                            print('title=> ${titlecontroller.text}');
-                            print('date=> ${datecontroller.text} ');
-                            print('time=> ${timecontroller.text} ');
-                            provider.addTask(TaskWidget(
-                                info: Information(
-                                    date: datecontroller.text,
-                                    time: timecontroller.text,
-                                    title: titlecontroller.text,
-                                    description: descriptionContorller.text)));
-                            Navigator.pop(context);
-                          }
-                        });
+                               if (formController.currentState?.validate() == true) {
+                          provider.insertToDataBase(
+                              title: titlecontroller.text,
+                              time: timecontroller.text,
+                              date: datecontroller.text,
+                              description: descriptionContorller.text);
+                          provider.addTask(
+                              Information(
+                                  time: timecontroller.text,
+                                  title: titlecontroller.text,
+                                  date: datecontroller.text,
+                                  description: descriptionContorller.text ,
+                              )
+                          );
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: "Task Added",
+                            // toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                            fontSize: 20.0,
+
+                          );
+
+                          setState(() {});
+
+                        }
                       },
                       child: const Text(
                         'ADD Task',
